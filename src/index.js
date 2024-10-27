@@ -11,9 +11,10 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL,
-    methods: ['GET', 'POST']
-  }
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+  },
 });
 
 app.use(cors());
