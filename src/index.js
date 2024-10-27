@@ -27,6 +27,7 @@ io.on('connection', (socket) => {
   socket.on('join', ({ playerId, name }) => {
     const isFirstPlayer = gameManager.getPlayerCount() === 0;
     gameManager.addPlayer(playerId, name, isFirstPlayer);
+    gameManager.socketToPlayerId.set(socket.id, playerId);
     socket.join('game-room');
     
     // Broadcast updated game state to all clients
@@ -63,6 +64,7 @@ io.on('connection', (socket) => {
     const playerId = gameManager.getPlayerIdBySocketId(socket.id);
     if (playerId) {
       gameManager.removePlayer(playerId);
+      gameManager.socketToPlayerId.delete(socket.id);
       io.to('game-room').emit('game-state', gameManager.getGameState());
     }
     console.log('Client disconnected:', socket.id);
